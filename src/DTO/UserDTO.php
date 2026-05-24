@@ -24,7 +24,7 @@ class UserDTO // class permettant de vérifier les inputs reçus
         #[Assert\Regex(pattern: '/^(?=.*[A-Za-z])(?=.*\d).+$/', //Regex pour le mdp
             message: 'Le mot de passe doit contenir au moins une lettre et un chiffre'
         )]
-        public string $password,
+        public ?string $password = null,
     ) {
 
     }

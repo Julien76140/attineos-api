@@ -49,30 +49,43 @@ final class UserController extends AbstractController
 
             $this->userService->createUser($data);
 
-            return $this->json(['message' => 'L\'utilisateur à été créé !'], Response::HTTP_CREATED);
+            return $this->json(['message' => 'L\'utilisateur a été créé !'], Response::HTTP_CREATED);
 
         } catch (Exception $exception) {
             return $this->json(['message' => $exception->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 
-    #[Route('/api/users/{id}', name: 'app_update_user', methods: ['PUT'])]
-    public function updateUser(int $id): JsonResponse
+    #[Route('/api/users', name: 'app_update_user', methods: ['PUT'])]
+    public function updateUser(Request $request): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+
+        try {
+
+            $user = $this->getUser();
+            $data = json_decode($request->getContent(), true);
+
+            $this->userService->updateUser($data, $user);
+
+            return $this->json(['message' => 'L\'utilisateur a été mis à jour !'], Response::HTTP_OK);
+
+        } catch (Exception $exception) {
+            return $this->json(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
     }
 
-    #[Route('/api/users/{id}', name: 'app_delkete_user', methods: ['DELETE'])]
-    public function deleteUser(int $id): JsonResponse
+    #[Route('/api/users', name: 'app_delete_user', methods: ['DELETE'])]
+    public function deleteUser(): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
-    }
+        try {
+            $user = $this->getUser();
 
+            $this->userService->deleteUser($user);
+
+            return $this->json(['message' => 'L\'utilisateur a été supprimé !'], Response::HTTP_NO_CONTENT);
+        } catch (Exception $exception) {
+            return $this->json(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+    }
 
 }

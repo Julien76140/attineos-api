@@ -5,16 +5,41 @@ security:
 
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
-
+        app_user_provider: # On définit un provider pour notre utilisateur qui sera util pour la connexion
+            entity:
+                class: App\Entity\User
+                property: email
     firewalls:
+        login:
+            pattern: ^/api/auth/login
+            stateless: true
+            provider: app_user_provider
+            json_login:
+                check_path: api_auth_login
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        public:
+            pattern: ^/api/users$
+            methods: [POST, GET]
+            stateless: true
+            security: false
+
+        api:
+            pattern: ^/api
+            stateless: true
+            provider: app_user_provider
+            jwt: ~
+
         dev:
-            # Ensure dev tools and static assets are always allowed
             pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
+
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -24,8 +49,9 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/auth/login, roles: PUBLIC_ACCESS } # On définit les routes publics
+        - { path: ^/api/users, roles: PUBLIC_ACCESS, methods: [POST, GET] }
+        - { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY, methods: [PUT, DELETE] } # On Spécifie les routes protégées par un token JWT
 
 when@test:
     security:
