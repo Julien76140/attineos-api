@@ -1,3 +1,7 @@
+###> ignore config ida
+.idea
+*.iml
+###< ###
 
 ###> symfony/framework-bundle ###
 /.env.local
