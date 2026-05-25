@@ -65,7 +65,6 @@ JWT_PASSPHRASE=votre_passphrase
 - GET `/api/users/{id}` — Récupère un user
 - POST `/api/users` — Crée un user
 - POST `/api/auth/login` — Connexion
-- 
 ### Protégés — token JWT requis (`Authorization: Bearer <token>`)
 
 - PUT `/api/users` — Met à jour l'utilisateur connecté
@@ -110,4 +109,10 @@ Authorization: Bearer <token>
     "email": "julien.mallet@gmail.com",
     "password": "NouveauMdp1"
 }
+```
+
+### Supprimer son profil
+```json
+DELETE /api/users
+Authorization: Bearer <token>
 ```
