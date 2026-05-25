@@ -32,8 +32,8 @@ final class UserController extends AbstractController
     {
         try {
             $user = $this->userService->getUserById($id);
+            
             return $this->json($user, Response::HTTP_OK, [], ['groups' => ['user:read']]);
-
         } catch (\Exception $e) {
             return $this->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
         }
@@ -44,13 +44,10 @@ final class UserController extends AbstractController
     {
 
         try {
-
             $data = json_decode($request->getContent(), true);
-
             $this->userService->createUser($data);
-
+            
             return $this->json(['message' => 'L\'utilisateur a été créé !'], Response::HTTP_CREATED);
-
         } catch (Exception $exception) {
             return $this->json(['message' => $exception->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -61,14 +58,11 @@ final class UserController extends AbstractController
     {
 
         try {
-
             $user = $this->getUser();
             $data = json_decode($request->getContent(), true);
-
             $this->userService->updateUser($data, $user);
-
+            
             return $this->json(['message' => 'L\'utilisateur a été mis à jour !'], Response::HTTP_OK);
-
         } catch (Exception $exception) {
             return $this->json(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }
